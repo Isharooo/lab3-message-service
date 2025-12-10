@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/messages")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class MessageController {
 
     private final MessageService messageService;
@@ -36,6 +35,17 @@ public class MessageController {
         return ResponseEntity.ok(conversation);
     }
 
+    @GetMapping("/received/{recipientId}")
+    public ResponseEntity<List<MessageDTO>> getReceivedMessages(@PathVariable String recipientId) {
+        List<MessageDTO> received = messageService.getInboxForUser(recipientId);
+        return ResponseEntity.ok(received);
+    }
+
+    @GetMapping("/unread/count/{recipientId}")
+    public ResponseEntity<Long> getUnreadCount(@PathVariable String recipientId) {
+        long count = messageService.getUnreadCount(recipientId);
+        return ResponseEntity.ok(count);
+    }
 
     @PutMapping("/{messageId}/read")
     public ResponseEntity<MessageDTO> markAsRead(@PathVariable Long messageId) {

@@ -46,6 +46,11 @@ public class MessageService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+
+    public long getUnreadCount(String recipientId) {
+        return messageRepository.countByRecipientIdAndIsReadFalse(recipientId);
+    }
+
     public MessageDTO markMessageAsRead(Long messageId) {
         Message message = messageRepository.findById(messageId)
                 .orElseThrow(() -> new RuntimeException("Meddelande med ID " + messageId + " finns inte"));
@@ -76,7 +81,7 @@ public class MessageService {
                 dto.getSubject(),
                 dto.getContent(),
                 dto.getCreatedAt(),
-                dto.isRead(),       
+                dto.isRead(),
                 dto.getConversationId()
         );
     }
